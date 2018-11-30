@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">가상 통장</string>
+    <string name="title_money">금액 환산</string>
+    <string name="title_time">시간 환산</string>
+    <string name="title_write">항목 추가</string>
+
+    <string name="tab_money">금액을 선택하세요</string>
+    <string name="tab_time">시간을 선택하세요</string>
+    <string name="tab_write">추가할 탭을 선택하세요</string>
+</resources>

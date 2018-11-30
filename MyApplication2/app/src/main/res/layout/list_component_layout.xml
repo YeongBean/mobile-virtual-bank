@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:background="@drawable/listviewframe">
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/original_item"
+            android:layout_width="wrap_content"
+            android:layout_height= "wrap_content"
+            android:text = "본래 항목명"
+            android:textSize="20dp"
+            android:layout_margin="2dp"/>
+
+        <TextView
+            android:id="@+id/original_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="99999원"
+            android:textSize="16dp"
+            android:background="#ffffff"
+            android:layout_margin="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/changed_value"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:background="#ffbb5d"
+        android:text="1치킨"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:layout_margin="2dp"
+        android:layout_marginRight="10dp"/>
+
+</LinearLayout>

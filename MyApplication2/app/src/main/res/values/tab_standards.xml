@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="money">
+        <item >치킨(18000원)</item>
+        <item >노래 1곡(400원)</item>
+        <item >생수500ml(750원)</item>
+        <item >PC방 1시간(1000원)</item>
+        <item >정식(7500원)</item>
+        <item >컵라면(1100원)</item>
+        <item >햄버거세트(5500원)</item>
+    </string-array>
+
+    <string-array name="time">
+        <item >낮잠(60분)</item>
+        <item >강의(75분)</item>
+        <item >식사(30분)</item>
+        <item >노래부르기(4분)</item>
+        <item >영화(120분)</item>
+        <item >하루(1440분)</item>
+        <item >세탁기(50분)</item>
+    </string-array>
+
+    <string-array name="tabs">
+        <item >돈</item>
+        <item >시간</item>
+    </string-array>
+</resources>
