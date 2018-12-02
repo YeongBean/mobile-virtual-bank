@@ -14,7 +14,7 @@ import java.io.CharArrayWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-public class CustomAdapter extends BaseAdapter implements Filterable {
+public class CustomAdapter extends BaseAdapter{
 
     private ArrayList<CustomDTO> listCustom = new ArrayList<>();
     private ArrayList<CustomDTO> listCustom2 = new ArrayList<>();
@@ -25,17 +25,11 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
 
     private int tabname;
     private int tabnum;
-    private int years;
-    private int months;
-    private int days;
     private String mDate;
 
     public void SetDateSelection(int y, int m, int d)
     {
-        years = y;
-        months = m;
-        days = d;
-        mDate = String.valueOf(y) +"년 "+ String.valueOf(m) +"월 "+ String.valueOf(d) + "일";
+        mDate = String.format("%d년 %d월 %d일", y , m , d);
     }
 
     public void setSpinnerSelectedItem(int standardnum, int whattab){
@@ -46,13 +40,19 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
     // ListView에 보여질 Item 수
     @Override
     public int getCount() {
-        return filteredItemList.size();
+        if(tabname == 0) {
+            return listCustom.size();
+        }else {return listCustom2.size();}
+
     }
 
     // 하나의 Item(ImageView 1, TextView 2)
     @Override
     public Object getItem(int position) {
-        return filteredItemList.get(position);
+        if(tabname == 0) {
+            return listCustom.get(position);
+        }else {return listCustom2.get(position);}
+
     }
 
     // Item의 id : Item을 구별하기 위한 것으로 position 사용
@@ -64,6 +64,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
     // 실제로 Item이 보여지는 부분
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         CustomViewHolder holder;
 
         if (convertView == null) {
@@ -73,19 +74,22 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
             holder.name = (TextView) convertView.findViewById(R.id.original_item);
             holder.origin_val = (TextView) convertView.findViewById(R.id.original_value);
             holder.changed_val = (TextView) convertView.findViewById(R.id.changed_value);
-
+            holder.item_Date = (TextView) convertView.findViewById(R.id.thisDate);
             convertView.setTag(holder);
         } else {
             holder = (CustomViewHolder) convertView.getTag();
         }
 
+        CustomDTO dto;
+        if(tabnum == 0) { dto = listCustom.get(position);}
+        else { dto = listCustom2.get(position);}
 
-        CustomDTO dto = filteredItemList.get(position);
-        //if(tabnum == 0) { dto = listCustom.get(position);}
-        //else { dto = listCustom2.get(position);}
 
             holder.name.setText(dto.getResId());
-            holder.origin_val.setText(dto.getTitle());
+        if(tabnum == 0) { holder.origin_val.setText(dto.getTitle() + "원");}
+        else { holder.origin_val.setText(dto.getTitle() + "분");}
+
+            holder.item_Date.setText(dto.getDate());
             if (tabnum == 0) {
                 if (tabname == 0) {
                     holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 18000) + "마리");
@@ -123,18 +127,13 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
         return convertView;
     }
 
-    @Override
-    public Filter getFilter() {
-        if(listfilter == null){
-            listfilter = new listFilter();
-        }
-        return listfilter;
-    }
+
 
     class CustomViewHolder {
         TextView name;
         TextView origin_val;
         TextView changed_val;
+        TextView item_Date;
     }
 
     // MainActivity에서 Adapter에있는 ArrayList에 data를 추가시켜주는 함수
@@ -153,55 +152,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
         else {listCustom2.clear();}
     }
 
-
-    private class listFilter extends Filter {
-
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-
-            if (constraint == null || constraint.length() == 0) {
-                if (tabnum == 0) {
-                    results.values = listCustom;
-                    results.count = listCustom.size();
-                } else {
-                    results.values = listCustom2;
-                    results.values = listCustom2.size();
-                }
-            } else {
-                ArrayList<CustomDTO> itemlist = new ArrayList<CustomDTO>();
-                if (tabnum == 0) {
-                    for (CustomDTO item : listCustom) {
-                        if (item.getDate().contains(mDate)) {
-                            itemlist.add(item);
-                        }
-                    }
-                } else {
-                    for (CustomDTO item : listCustom2) {
-                        if (item.getDate().contains(mDate)) {
-                            itemlist.add(item);
-                        }
-                    }
-
-                }
-                results.values = itemlist;
-                results.count = itemlist.size();
-            }
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredItemList = (ArrayList<CustomDTO>)results.values;
-            if(results.count > 0){
-                notifyDataSetChanged();
-            }else {
-                notifyDataSetInvalidated();
-            }
-
-        }
-    }
 
 
 }

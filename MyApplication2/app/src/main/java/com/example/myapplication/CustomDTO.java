@@ -24,7 +24,7 @@ class CustomDTO {
 
     public void setDate(int year, int month, int day)
     {
-       dates =  String.valueOf(year) +"년 "+ String.valueOf(month) +"월 "+ String.valueOf(day) + "일";
+       dates =  String.format("%d년 %d월 %d일", year , month , day);
     }
 
     public String getDate()
