@@ -80,7 +80,7 @@ public class CustomAdapter extends BaseAdapter{
             holder = (CustomViewHolder) convertView.getTag();
         }
 
-        CustomDTO dto;
+        CustomDTO dto = new CustomDTO();
         if(tabnum == 0) { dto = listCustom.get(position);}
         else { dto = listCustom2.get(position);}
 

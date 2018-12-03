@@ -167,9 +167,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         adapter.SetDateSelection(currentYear,currnetMonth + 1,currentDay);
+        setExamples();
         updateResult();
     }
 
+    private void setExamples()
+    {
+        CustomDTO dtos = new CustomDTO();
+        CustomDTO dtos2 = new CustomDTO();
+        dtos.setDate(currentYear,currnetMonth + 1,currentDay);
+        dtos2.setDate(currentYear,currnetMonth + 1,currentDay);
+        dtos.setResId("예시 항목");
+        dtos2.setResId("예시 항목");
+        dtos.setTitle("300");
+        adapter.setSpinnerSelectedItem(0, 1);
+        adapter.addItem(dtos);
+        dtos2.setTitle("27000");
+        adapter.setSpinnerSelectedItem(0, 0);
+        adapter.addItem(dtos2);
+    }
     private void updateResult()
     {
         dateText.setText(mStrDate);
