@@ -3,7 +3,8 @@
 This app has two important characteristics.
 
 First, this app doesn't support auto record.
-Second, this app will not give you any kind of economic benefits or comforts.
+
+Second, this app will not give you any kind of economic benefits or actual comforts.
 
 Because this app is for recording your abandoned expenditure.
 
