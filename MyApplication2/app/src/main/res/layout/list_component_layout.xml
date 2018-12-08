@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp"
-    android:background="@drawable/listviewframe">
+    android:background="#ffffff">
 
 
 
@@ -44,9 +44,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0.4"
-        android:background="@drawable/standardframe"
         android:text="1치킨"
+        android:textStyle="bold"
         android:textSize="20dp"
+        android:textColor="#010f6c"
         android:gravity="center"
         android:textAlignment="gravity"
         android:layout_margin="2dp"

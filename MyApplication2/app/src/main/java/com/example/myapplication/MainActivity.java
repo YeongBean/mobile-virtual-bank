@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -42,6 +43,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private String mStrDate = "????";
     private CustomAdapter adapter;
     private TextView tabview;
-
+    private TextView otherVals;
+    private CustomDialog customDialog;
     int tabName;
     int whattab;
 
@@ -67,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     int currnetMonth;
     int currentDay;
 
-    final static String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/TestLog/money.txt";
-    final static String filePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/TestLog/time.txt";
+    final static String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM/money.txt";
+    final static String filePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM/time.txt";
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
                     whattab = 0;
                     adapter.setSpinnerSelectedItem(0, whattab);
                     adapter.notifyDataSetChanged();
+                    ShowSavedResult();
+
                     return true;
                 case R.id.navigation_time:
                     mTextMessage.setText(R.string.tab_time);
@@ -90,11 +95,13 @@ public class MainActivity extends AppCompatActivity {
                     whattab = 1;
                     adapter.setSpinnerSelectedItem(0, whattab);
                     adapter.notifyDataSetChanged();
+                    ShowSavedResult();
                     return true;
                 case R.id.navigation_write:
-                    CustomDialog customDialog = new CustomDialog(MainActivity.this);
+                    customDialog = new CustomDialog(MainActivity.this);
                     customDialog.setwhattab(whattab);
                     customDialog.callFunction(adapter, currentYear, currnetMonth, currentDay);
+                    ShowSavedResult();
                     return true;
             }
 
@@ -116,15 +123,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ReadMoneyRecord(filePath);
-        ReadTimeRecord(filePath2);
-
 
         whattab = 0;
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         tabview = (TextView)findViewById(R.id.tabnameview);
+        otherVals = (TextView)findViewById(R.id.othervaluesview);
         dateText = (TextView) findViewById(R.id.dateView);
         dateButton = (ImageButton) findViewById(R.id.datePicker);
         StandardSpinner = (Spinner) findViewById(R.id.standardSpinner);
@@ -133,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //adapter.setSpinnerSelectedItem(tabName);
-                tabview.setText(String.valueOf(position));
+                //tabview.setText(String.valueOf(position));
                 tabName = position;
                 adapter.setSpinnerSelectedItem(tabName, whattab);
                 adapter.notifyDataSetChanged();
@@ -168,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
         });
         adapter.SetDateSelection(currentYear,currnetMonth + 1,currentDay);
         setExamples();
+
+        ReadMoneyRecord(filePath);
+        ReadTimeRecord(filePath2);
+        ShowSavedResult();
         updateResult();
     }
 
@@ -214,10 +223,46 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public void WritingRecord()
+    {
+        try
+        {
+            FileOutputStream fos;
+            CustomDTO dto = new CustomDTO();
+            if(whattab == 0){ fos = openFileOutput(filePath, Context.MODE_APPEND);}
+            else{ fos = openFileOutput(filePath2, Context.MODE_APPEND);}
+            PrintWriter out = new PrintWriter(fos);
+            for(int i = 0; i < adapter.getCount(); i++)
+            {
+                if(i == (adapter.getCount()-1))
+                {
+                    if(whattab == 0){ dto = adapter.getDTO(i);}
+                    else{ dto = adapter.getDTO(i);}
+                    out.println(dto.getResId());
+                    out.println(dto.getTitle());
+                    out.println(dto.getYears());
+                    out.println(dto.getMonths());
+                    out.println(dto.getDayss());
+                    out.close();
+                    Toast.makeText(this, "파일 저장 완료", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
     public String ReadMoneyRecord(String path){
         StringBuffer strBuffer = new StringBuffer();
         try{
-            InputStream is = new FileInputStream(path);
+            File dir = new File (path);
+            //디렉토리 폴더가 없으면 생성함
+            if(!dir.exists()){
+                dir.mkdir();
+                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            }
+            InputStream is = new FileInputStream(dir);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String itemname;
             String originalVal;
@@ -251,7 +296,13 @@ public class MainActivity extends AppCompatActivity {
     public String ReadTimeRecord(String path){
         StringBuffer strBuffer = new StringBuffer();
         try{
-            InputStream is = new FileInputStream(path);
+            File dir = new File (path);
+            //디렉토리 폴더가 없으면 생성함
+            if(!dir.exists()){
+                dir.mkdir();
+                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            }
+            InputStream is = new FileInputStream(dir);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String itemname;
             String originalVal;
@@ -279,7 +330,31 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "저장된 기록이 없습니다.", Toast.LENGTH_SHORT).show();
             return null;
         }
+
         return strBuffer.toString();
+    }
+
+    public void ShowSavedResult()
+    {
+        long results;
+        if(
+                whattab == 0){results = adapter.getSumOfMoney();
+                tabview.setText("누적 가상저금액 " + results +"원");
+                if(results > 100000){otherVals.setText(" =  책 5권");}
+                else if(results > 50000){otherVals.setText(" =  책 2권");}
+                else if(results > 5000){otherVals.setText(" =  기분 좋음");}
+                else otherVals.setText("");
+        }
+        else{
+            results = adapter.getSumOfTime();
+            tabview.setText("누적 가상저금시간 " + results +"분");
+            if(results > 1000){otherVals.setText(" =  걸어서 마라톤 완주");}
+            else if(results > 500){otherVals.setText(" =  걸어서 하프마라톤 완주");}
+            else if(results > 100){otherVals.setText(" =  단편소설 독파");}
+            else otherVals.setText("");
+        }
+
+
     }
 }
 

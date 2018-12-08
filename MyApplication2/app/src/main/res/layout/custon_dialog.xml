@@ -17,7 +17,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#781400"/>
+        android:background="#040736"/>
 
     <EditText
         android:id="@+id/additem"

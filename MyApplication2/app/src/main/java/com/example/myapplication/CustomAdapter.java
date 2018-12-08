@@ -27,8 +27,42 @@ public class CustomAdapter extends BaseAdapter{
     private int tabnum;
     private String mDate;
 
+    private long SumOfMoney = 0;
+    private long SumOfTime = 0;
+    private int years;
+    private int months;
+    private int days;
+
+    public long getSumOfMoney()
+    {
+        SumOfMoney = 0;
+        CustomDTO dto = new CustomDTO();
+        for(int i = 0; i < listCustom.size(); i++)
+        {
+            dto = listCustom.get(i);
+            SumOfMoney += Long.parseLong(dto.getTitle());
+        }
+        return SumOfMoney;
+    }
+
+    public long getSumOfTime()
+    {
+        SumOfTime = 0;
+        CustomDTO dto = new CustomDTO();
+        for(int i = 0; i < listCustom2.size(); i++)
+        {
+            dto = listCustom2.get(i);
+            SumOfTime += Long.parseLong(dto.getTitle());
+        }
+        return SumOfTime;
+    }
+
+
     public void SetDateSelection(int y, int m, int d)
     {
+        years = y;
+        months = m;
+        days = d;
         mDate = String.format("%d년 %d월 %d일", y , m , d);
     }
 
@@ -52,7 +86,12 @@ public class CustomAdapter extends BaseAdapter{
         if(tabname == 0) {
             return listCustom.get(position);
         }else {return listCustom2.get(position);}
+    }
 
+    public CustomDTO getDTO(int position) {
+        if(tabname == 0) {
+            return listCustom.get(position);
+        }else {return listCustom2.get(position);}
     }
 
     // Item의 id : Item을 구별하기 위한 것으로 position 사용
@@ -86,8 +125,12 @@ public class CustomAdapter extends BaseAdapter{
 
 
             holder.name.setText(dto.getResId());
-        if(tabnum == 0) { holder.origin_val.setText(dto.getTitle() + "원");}
-        else { holder.origin_val.setText(dto.getTitle() + "분");}
+        if(tabnum == 0) {
+            holder.origin_val.setText(dto.getTitle() + "원");
+            SumOfMoney += Long.parseLong(dto.getTitle());
+        }
+        else { holder.origin_val.setText(dto.getTitle() + "분");
+            SumOfTime += Long.parseLong(dto.getTitle());}
 
             holder.item_Date.setText(dto.getDate());
             if (tabnum == 0) {
@@ -152,6 +195,9 @@ public class CustomAdapter extends BaseAdapter{
         else {listCustom2.clear();}
     }
 
+    public int getYears(){return years;}
+    public int getMonths(){return months;}
+    public int getDayss(){return days;}
 
 
 }

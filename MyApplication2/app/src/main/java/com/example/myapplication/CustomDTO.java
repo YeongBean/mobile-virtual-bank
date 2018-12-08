@@ -4,7 +4,9 @@ class CustomDTO {
     private String name;
     private String origin_val;
     private String dates;
-
+    private int years;
+    private int months;
+    private int days;
 
     public String getResId() {
         return name;
@@ -24,6 +26,9 @@ class CustomDTO {
 
     public void setDate(int year, int month, int day)
     {
+        years = year;
+        months = month;
+        days = day;
        dates =  String.format("%d년 %d월 %d일", year , month , day);
     }
 
@@ -31,5 +36,7 @@ class CustomDTO {
     {
         return dates;
     }
-
+    public int getYears(){return years;}
+    public int getMonths(){return months;}
+    public int getDayss(){return days;}
 }

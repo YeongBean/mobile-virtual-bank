@@ -22,14 +22,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTabs"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:backgroundTint="#396ee9">
 
             <ImageButton
                 android:id="@+id/datePicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@color/colorTabs"
+                android:background="#00ffffff"
                 android:onClick="mOnClick"
                 android:src="@drawable/calendar" />
 
@@ -39,14 +40,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="날짜를 선택해 주세요"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/standardframe"
+            android:background="#538cff"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingTop="5dp">
@@ -68,8 +70,9 @@
                 android:layout_height="30dp"
                 android:layout_gravity="right"
                 android:layout_weight="1"
-                android:background="#e9c295"
-                android:entries="@array/money" />
+                android:background="#6db9ff"
+                android:entries="@array/money"
+                />
 
         </LinearLayout>
 
@@ -78,7 +81,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text = "123"
-            android:textSize="24dp"/>
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/othervaluesview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text = "123"
+            android:textSize="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1843dc"/>
 
         <ListView
             android:id="@+id/ListComponents"
