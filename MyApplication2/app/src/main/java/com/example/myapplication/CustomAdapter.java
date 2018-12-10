@@ -104,20 +104,18 @@ public class CustomAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        setSpinnerSelectedItem(tabname, tabnum);
         CustomViewHolder holder;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_component_layout, null, false);
-
+        }
             holder = new CustomViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.original_item);
             holder.origin_val = (TextView) convertView.findViewById(R.id.original_value);
             holder.changed_val = (TextView) convertView.findViewById(R.id.changed_value);
             holder.item_Date = (TextView) convertView.findViewById(R.id.thisDate);
             convertView.setTag(holder);
-        } else {
-            holder = (CustomViewHolder) convertView.getTag();
-        }
+
 
         CustomDTO dto = new CustomDTO();
         if(tabnum == 0) { dto = listCustom.get(position);}

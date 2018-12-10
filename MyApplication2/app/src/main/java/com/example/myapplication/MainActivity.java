@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -43,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -356,7 +359,153 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    class CustomDialog {
+
+        private Context context;
+        final  String foldername = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM";
+        final  String filename = "money.txt";
+        final  String filename2 = "time.txt";
+        int whattab;
+
+        public void setwhattab(int tab){whattab = tab;}
+
+
+        public CustomDialog(Context context) {
+            this.context = context;
+        }
+
+
+
+        // 호출할 다이얼로그 함수를 정의한다.
+        public void callFunction(final CustomAdapter adapter, final int y, final int m, final int d) {
+
+
+            final Dialog dlg = new Dialog(context);
+
+            dlg.setContentView(R.layout.custon_dialog);
+
+            dlg.show();
+
+            final EditText additm = (EditText) dlg.findViewById(R.id.additem);
+            final EditText addval = (EditText) dlg.findViewById(R.id.addvalue);
+            final Button okButton = (Button) dlg.findViewById(R.id.okButton);
+            final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(additm.getText().length() > 0 && addval.getText().length() > 0)
+                    {
+                        CustomDTO dto = new CustomDTO();
+                        dto.setResId(additm.getText().toString());
+                        dto.setTitle(addval.getText().toString());
+                        dto.setDate(y,m+1,d);
+
+                        if(whattab ==0){WriteTextFile(foldername, filename, additm.getText().toString(),addval.getText().toString(), y, m , d);}
+                        else{WriteTextFile(foldername, filename2, additm.getText().toString(),addval.getText().toString(), y, m , d);}
+
+                        adapter.addItem(dto);
+                        adapter.notifyDataSetChanged();
+                        ShowSavedResult();
+                        dlg.dismiss();
+                    }else
+                    {
+                        Toast.makeText(context, "값을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "취소 했습니다.", Toast.LENGTH_SHORT).show();
+                    dlg.dismiss();
+                }
+            });
+        }
+
+        public void WriteTextFile(String foldername, String filename, String itemName, String Or_val, int y, int m, int d){
+            try{
+                File dir = new File (foldername);
+                //디렉토리 폴더가 없으면 생성함
+                if(!dir.exists()){
+                    dir.mkdir();
+                }
+                //파일 output stream 생성
+                FileOutputStream fos = new FileOutputStream(foldername+"/"+filename, true);
+                //파일쓰기
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                writer.write(itemName + "\n" + Or_val+ "\n" + y+ "\n" + m+ "\n" + d);
+                writer.flush();
+
+                writer.close();
+                fos.close();
+            }catch (IOException e){
+                e.printStackTrace();
+                Toast.makeText(context, "쓸 수 없습니다.", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+
+    class CustomBox {
+
+        private Context context;
+
+        public CustomBox(Context context) {
+            this.context = context;
+        }
+
+        // 호출할 다이얼로그 함수를 정의한다.
+        public void callFunction(final CustomAdapter adapter, final ListView listview, final int positions) {
+
+            // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
+            final Dialog dlg = new Dialog(context);
+
+            // 액티비티의 타이틀바를 숨긴다.
+            //dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // 커스텀 다이얼로그의 레이아웃을 설정한다.
+            dlg.setContentView(R.layout.deleteview);
+
+            // 커스텀 다이얼로그를 노출한다.
+            dlg.show();
+
+            // 커스텀 다이얼로그의 각 위젯들을 정의한다.
+            final Button okButton = (Button) dlg.findViewById(R.id.deleteokButton);
+            final Button cancelButton = (Button) dlg.findViewById(R.id.deletecancelButton);
+
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // 아이템 삭제
+                    adapter.removeItem(positions);
+                    // listview 선택 초기화.
+                    listview.clearChoices();
+
+                    // listview 갱신.
+                    adapter.notifyDataSetChanged();
+                    ShowSavedResult();
+                    dlg.dismiss();
+                }
+            });
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "취소 했습니다.", Toast.LENGTH_SHORT).show();
+
+                    // 커스텀 다이얼로그를 종료한다.
+                    dlg.dismiss();
+                }
+            });
+        }
+    }
 }
+
+
+
 
 
 
