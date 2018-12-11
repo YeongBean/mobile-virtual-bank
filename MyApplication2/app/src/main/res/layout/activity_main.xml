@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="날짜를 선택해 주세요"
+                android:text="날짜 표시"
                 android:textSize="20dp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -80,14 +80,14 @@
             android:id="@+id/tabnameview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text = "123"
+            android:text = "총 금액 or 시간"
             android:textSize="16dp"/>
 
         <TextView
             android:id="@+id/othervaluesview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text = "123"
+            android:text = "환산"
             android:textSize="16dp"/>
 
         <View

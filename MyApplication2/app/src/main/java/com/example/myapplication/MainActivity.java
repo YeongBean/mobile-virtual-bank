@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
     int currnetMonth;
     int currentDay;
 
-    final static String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM/money.txt";
-    final static String filePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM/time.txt";
+    final static String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/money.txt";
+    final static String filePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/time.txt";
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -175,10 +176,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         adapter.SetDateSelection(currentYear,currnetMonth + 1,currentDay);
-        setExamples();
+        //setExamples();
 
-        ReadMoneyRecord(filePath);
         ReadTimeRecord(filePath2);
+        ReadMoneyRecord(filePath);
+
         ShowSavedResult();
         updateResult();
     }
@@ -226,45 +228,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void WritingRecord()
-    {
-        try
-        {
-            FileOutputStream fos;
-            CustomDTO dto = new CustomDTO();
-            if(whattab == 0){ fos = openFileOutput(filePath, Context.MODE_APPEND);}
-            else{ fos = openFileOutput(filePath2, Context.MODE_APPEND);}
-            PrintWriter out = new PrintWriter(fos);
-            for(int i = 0; i < adapter.getCount(); i++)
-            {
-                if(i == (adapter.getCount()-1))
-                {
-                    if(whattab == 0){ dto = adapter.getDTO(i);}
-                    else{ dto = adapter.getDTO(i);}
-                    out.println(dto.getResId());
-                    out.println(dto.getTitle());
-                    out.println(dto.getYears());
-                    out.println(dto.getMonths());
-                    out.println(dto.getDayss());
-                    out.close();
-                    Toast.makeText(this, "파일 저장 완료", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
     public String ReadMoneyRecord(String path){
         StringBuffer strBuffer = new StringBuffer();
         try{
             File dir = new File (path);
             //디렉토리 폴더가 없으면 생성함
-            if(!dir.exists()){
-                dir.mkdir();
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-            }
+            //if(!dir.exists()){
+            //    dir.mkdir();
+            //    Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            //}
+            whattab = 0;
+            adapter.setSpinnerSelectedItem(0,whattab);
             InputStream is = new FileInputStream(dir);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String itemname;
@@ -273,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
             int itemDate_m;
             int itemDate_d;
             CustomDTO dto = new CustomDTO();
+
             while((itemname=reader.readLine())!=null){
                 dto.setResId(itemname);
                 originalVal = reader.readLine();
@@ -281,9 +256,8 @@ public class MainActivity extends AppCompatActivity {
                 itemDate_m = Integer.parseInt(reader.readLine());
                 itemDate_d = Integer.parseInt(reader.readLine());
                 dto.setDate(itemDate_y, itemDate_m, itemDate_d);
-                whattab = 0;
-                adapter.setSpinnerSelectedItem(0,whattab);
                 adapter.addItem(dto);
+                adapter.notifyDataSetChanged();
             }
 
             reader.close();
@@ -301,10 +275,12 @@ public class MainActivity extends AppCompatActivity {
         try{
             File dir = new File (path);
             //디렉토리 폴더가 없으면 생성함
-            if(!dir.exists()){
-                dir.mkdir();
-                Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-            }
+            //if(!dir.exists()){
+            //    dir.mkdir();
+            //    Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
+            //}
+            whattab = 1;
+            adapter.setSpinnerSelectedItem(0,whattab);
             InputStream is = new FileInputStream(dir);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String itemname;
@@ -313,7 +289,8 @@ public class MainActivity extends AppCompatActivity {
             int itemDate_m;
             int itemDate_d;
             CustomDTO dto = new CustomDTO();
-            while((itemname=reader.readLine())!=null){
+            itemname = reader.readLine();
+            while(itemname!=null){
                 dto.setResId(itemname);
                 originalVal = reader.readLine();
                 dto.setTitle(originalVal);
@@ -321,9 +298,9 @@ public class MainActivity extends AppCompatActivity {
                 itemDate_m = Integer.parseInt(reader.readLine());
                 itemDate_d = Integer.parseInt(reader.readLine());
                 dto.setDate(itemDate_y, itemDate_m, itemDate_d);
-                whattab = 1;
-                adapter.setSpinnerSelectedItem(0,whattab);
                 adapter.addItem(dto);
+                adapter.notifyDataSetChanged();
+                itemname = reader.readLine();
             }
 
             reader.close();
@@ -364,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
     class CustomDialog {
 
         private Context context;
-        final  String foldername = Environment.getExternalStorageDirectory().getAbsolutePath()+"/DCIM";
+        final  String foldername = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download";
         final  String filename = "money.txt";
         final  String filename2 = "time.txt";
         int whattab;
@@ -409,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
                         adapter.addItem(dto);
                         adapter.notifyDataSetChanged();
                         ShowSavedResult();
+                        //WritingRecord();
                         dlg.dismiss();
                     }else
                     {
@@ -427,23 +405,24 @@ public class MainActivity extends AppCompatActivity {
 
         public void WriteTextFile(String foldername, String filename, String itemName, String Or_val, int y, int m, int d){
             try{
-                File dir = new File (foldername);
+                //File dir = new File (foldername + "/" + filename);
                 //디렉토리 폴더가 없으면 생성함
-                if(!dir.exists()){
-                    dir.mkdir();
-                }
+                //if(!dir.exists()){
+                //    dir.mkdir();
+                //}
                 //파일 output stream 생성
+                //FileOutputStream output = new FileOutputStream(foldername+"/image.jpg");
                 FileOutputStream fos = new FileOutputStream(foldername+"/"+filename, true);
                 //파일쓰기
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-                writer.write(itemName + "\n" + Or_val+ "\n" + y+ "\n" + m+ "\n" + d);
+                writer.write(itemName + "\n" + Or_val+ "\n" + y+ "\n" + (m+1)+ "\n" + d + "\n");
                 writer.flush();
 
                 writer.close();
                 fos.close();
             }catch (IOException e){
                 e.printStackTrace();
-                Toast.makeText(context, "쓸 수 없습니다.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "쓸 수 없습니다.", Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -453,41 +432,39 @@ public class MainActivity extends AppCompatActivity {
     class CustomBox {
 
         private Context context;
+        final  String foldername = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download";
+        final  String filename = "money.txt";
+        final  String filename2 = "time.txt";
 
         public CustomBox(Context context) {
             this.context = context;
         }
 
-        // 호출할 다이얼로그 함수를 정의한다.
         public void callFunction(final CustomAdapter adapter, final ListView listview, final int positions) {
 
-            // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
             final Dialog dlg = new Dialog(context);
 
-            // 액티비티의 타이틀바를 숨긴다.
-            //dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-            // 커스텀 다이얼로그의 레이아웃을 설정한다.
             dlg.setContentView(R.layout.deleteview);
 
-            // 커스텀 다이얼로그를 노출한다.
             dlg.show();
 
-            // 커스텀 다이얼로그의 각 위젯들을 정의한다.
             final Button okButton = (Button) dlg.findViewById(R.id.deleteokButton);
             final Button cancelButton = (Button) dlg.findViewById(R.id.deletecancelButton);
 
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // 아이템 삭제
                     adapter.removeItem(positions);
-                    // listview 선택 초기화.
                     listview.clearChoices();
 
-                    // listview 갱신.
                     adapter.notifyDataSetChanged();
                     ShowSavedResult();
+
+                    String item = "";
+                    String vals = "";
+                    int x = 0, y = 0, z = 0;
+                    if(whattab ==0){WriteTextFile(foldername, filename, item, vals, x, y, z );}
+                    else{WriteTextFile(foldername, filename2, item, vals, x, y, z );}
                     dlg.dismiss();
                 }
             });
@@ -496,14 +473,39 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Toast.makeText(context, "취소 했습니다.", Toast.LENGTH_SHORT).show();
 
-                    // 커스텀 다이얼로그를 종료한다.
                     dlg.dismiss();
                 }
             });
         }
+
+        public void WriteTextFile(String foldername, String filename, String itemName, String Or_val, int y, int m, int d){
+            try{
+                FileOutputStream fos = new FileOutputStream(foldername+"/"+filename, false);
+                CustomDTO dto;
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                for(int i = 0; i < adapter.getCount(); i++)
+                {
+                    dto = adapter.getDTO(i);
+                    itemName = dto.getResId();
+                    Or_val = dto.getTitle();
+                    y = dto.getYears();
+                    m = dto.getMonths();
+                    d = dto.getDayss();
+                    writer.write(itemName + "\n" + Or_val+ "\n" + y+ "\n" + (m+1)+ "\n" + d + "\n");
+                }
+
+                writer.flush();
+
+                writer.close();
+                fos.close();
+            }catch (IOException e){
+                e.printStackTrace();
+                //Toast.makeText(context, "쓸 수 없습니다.", Toast.LENGTH_SHORT).show();
+
+            }
+        }
     }
 }
-
 
 
 

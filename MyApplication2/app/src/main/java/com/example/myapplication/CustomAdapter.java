@@ -74,7 +74,7 @@ public class CustomAdapter extends BaseAdapter{
     // ListView에 보여질 Item 수
     @Override
     public int getCount() {
-        if(tabname == 0) {
+        if(tabnum == 0) {
             return listCustom.size();
         }else {return listCustom2.size();}
 
@@ -83,18 +83,17 @@ public class CustomAdapter extends BaseAdapter{
     // 하나의 Item(ImageView 1, TextView 2)
     @Override
     public Object getItem(int position) {
-        if(tabname == 0) {
+        if(tabnum == 0) {
             return listCustom.get(position);
         }else {return listCustom2.get(position);}
     }
 
     public CustomDTO getDTO(int position) {
-        if(tabname == 0) {
+        if(tabnum == 0) {
             return listCustom.get(position);
         }else {return listCustom2.get(position);}
     }
 
-    // Item의 id : Item을 구별하기 위한 것으로 position 사용
     @Override
     public long getItemId(int position) {
         return position;
@@ -105,11 +104,12 @@ public class CustomAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
 
         setSpinnerSelectedItem(tabname, tabnum);
-        CustomViewHolder holder;
+        CustomViewHolder holder = new CustomViewHolder();
+
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_component_layout, null, false);
         }
-            holder = new CustomViewHolder();
+
             holder.name = (TextView) convertView.findViewById(R.id.original_item);
             holder.origin_val = (TextView) convertView.findViewById(R.id.original_value);
             holder.changed_val = (TextView) convertView.findViewById(R.id.changed_value);
@@ -117,7 +117,7 @@ public class CustomAdapter extends BaseAdapter{
             convertView.setTag(holder);
 
 
-        CustomDTO dto = new CustomDTO();
+        CustomDTO dto;
         if(tabnum == 0) { dto = listCustom.get(position);}
         else { dto = listCustom2.get(position);}
 
@@ -177,7 +177,6 @@ public class CustomAdapter extends BaseAdapter{
         TextView item_Date;
     }
 
-    // MainActivity에서 Adapter에있는 ArrayList에 data를 추가시켜주는 함수
     public void addItem(CustomDTO dto) {
         if(tabnum == 0){listCustom.add(dto);}
         else {listCustom2.add(dto);}
