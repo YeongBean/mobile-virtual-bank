@@ -132,37 +132,57 @@ public class CustomAdapter extends BaseAdapter{
 
             holder.item_Date.setText(dto.getDate());
             if (tabnum == 0) {
-                if (tabname == 0) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 18000) + "마리");
-                } else if (tabname == 1) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 400) + "곡");
-                } else if (tabname == 2) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 750) + "병");
-                } else if (tabname == 3) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1000) + "시간");
-                } else if (tabname == 4) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 7500) + "끼");
-                } else if (tabname == 5) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1100) + "개");
-                } else if (tabname == 6) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 500) + "세트");
+                switch(tabname)
+                {
+                    case 0:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 18000) + "마리");
+                        break;
+                    case 1:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 400) + "곡");
+                        break;
+                    case 2:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 750) + "병");
+                        break;
+                    case 3:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1000) + "시간");
+                        break;
+                    case 4:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 7500) + "끼");
+                        break;
+                    case 5:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1100) + "개");
+                        break;
+                    case 6:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 500) + "세트");
+                        break;
                 }
+
             } else {
-                if (tabname == 0) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 60) + "번");
-                } else if (tabname == 1) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 75) + "연강");
-                } else if (tabname == 2) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 30) + "번");
-                } else if (tabname == 3) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 4) + "곡");
-                } else if (tabname == 4) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 120) + "편");
-                } else if (tabname == 5) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1440) + "일");
-                } else if (tabname == 6) {
-                    holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 50) + "번");
+                switch(tabname)
+                {
+                    case 0:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 60) + "번");
+                        break;
+                    case 1:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 75) + "연강");
+                        break;
+                    case 2:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 30) + "번");
+                        break;
+                    case 3:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 4) + "곡");
+                        break;
+                    case 4:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 120) + "편");
+                        break;
+                    case 5:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 1440) + "일");
+                        break;
+                    case 6:
+                        holder.changed_val.setText(String.format("%.2f", Float.parseFloat(dto.getTitle()) / 50) + "번");
+                        break;
                 }
+
             }
 
         return convertView;
